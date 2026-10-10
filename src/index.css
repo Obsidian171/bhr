@@ -1,0 +1,237 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ---------- light theme (default) ---------- */
+  --color-bg: #ffffff;
+  --color-surface: #f6f4f4;
+  --color-elevated: #ffffff;
+  --color-line: #e4dede;
+  --color-fg: #1d1719;
+  --color-muted: #6f6769;
+  --color-brand: #9e2b36;
+  --color-brand-soft: #f7eaec;
+  --color-violet: #8e3fd1;
+  --color-cyan: #0a84ff;
+  --color-gold: #a8760c;
+
+  /* ---------- typography ---------- */
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Inter, system-ui, sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace;
+
+  --radius-card: 0.75rem;
+  --radius-ios: 1.25rem;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.03), 0 10px 30px -14px rgb(0 0 0 / 0.08);
+  --shadow-nav: 0 1px 0 rgb(0 0 0 / 0.06);
+}
+
+.dark {
+  --color-bg: #000000;
+  --color-surface: #1c1c1e;
+  --color-elevated: #2c2c2e;
+  --color-line: #2e2e32;
+  --color-fg: #f5f5f7;
+  --color-muted: #98989f;
+  --color-brand: #c03545;
+  --color-brand-soft: #331016;
+  --color-violet: #bf5af2;
+  --color-cyan: #64d2ff;
+  --color-gold: #e8b84b;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.85);
+  --shadow-nav: 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  /* Мгновенная смена темы: пока класс на корне, глобальные color-переходы
+     приостановлены, поэтому страница перекрашивается без лагающего кроссфейда. */
+  html.no-transitions *,
+  html.no-transitions *::before,
+  html.no-transitions *::after {
+    transition: none !important;
+  }
+
+  /* Бегунок переключателя темы продолжает скользить даже во время смены. */
+  html.no-transitions .theme-thumb {
+    transition: transform 0.3s ease-out !important;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.011em;
+    font-synthesis-weight: none;
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.022em;
+    font-weight: 700;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  img,
+  video,
+  svg {
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 76rem;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-x {
+      max-width: 82rem;
+      padding-inline: 3rem;
+    }
+  }
+
+  .card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+  }
+
+  .glass {
+    background-color: color-mix(in oklab, var(--color-bg) 60%, transparent);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+  }
+
+  .brand-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand) 0%,
+      color-mix(in oklab, var(--color-brand) 72%, var(--color-fg) 28%) 55%,
+      color-mix(in oklab, var(--color-brand) 52%, var(--color-fg) 48%) 100%
+    );
+  }
+
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  }
+
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-line) 45%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 45%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}
+
+@layer utilities {
+  .tap {
+    transition:
+      transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+
+  .tap:active {
+    transform: scale(0.97);
+  }
+
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-muted) 40%, transparent);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Анимированные gif-оверлеи: при reduced-motion оставляем только статичный постер. */
+  .gif-overlay {
+    display: none !important;
+  }
+}

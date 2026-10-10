@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Переход</title>
+  <script>
+    // GitHub Pages не имеет SPA-роутинга: прямой заход на /journal и т.п.
+    // отдаёт 404. Перенаправляем на корень, сохранив путь в параметре spa,
+    // а main.tsx восстановит его до первого рендера маршрутизатора.
+    ;(function () {
+      var path = window.location.pathname + window.location.search + window.location.hash
+      window.location.replace('/?spa=' + encodeURIComponent(path))
+    })()
+  </script>
+</head>
+<body></body>
+</html>

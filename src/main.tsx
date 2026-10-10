@@ -1,0 +1,31 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from '@/App'
+import { NotConfigured } from '@/pages/NotConfigured'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { AuthProvider } from '@/context/AuthContext'
+import { SiteProvider } from '@/context/SiteContext'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import '@/index.css'
+
+const root = document.getElementById('root')
+if (!root) throw new Error('Root element not found')
+
+createRoot(root).render(
+  <StrictMode>
+    <ErrorBoundary>
+      {isSupabaseConfigured ? (
+        <BrowserRouter>
+          <AuthProvider>
+            <SiteProvider>
+              <App />
+            </SiteProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      ) : (
+        <NotConfigured />
+      )}
+    </ErrorBoundary>
+  </StrictMode>,
+)
