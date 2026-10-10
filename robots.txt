@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /booth
+
+Sitemap: https://bhr.p7z.ru/sitemap.xml
